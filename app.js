@@ -2,12 +2,13 @@ const tiles_number = 300;
 const columns_number = 20;
 const rows_number = 15;
 
+let difficulty = 2000;
+
 const board = document.querySelector('#board');
 const log = console.log;
 const colors = ['#3dd', '#d5d', '#dee', '#fdd', '#dd0'];
 const shapes = ['square', 'circle', 'circle', 'circle', 'rombusr', 'rombusl'];
 let tiles = [];
-
 
 for (let i = 0; i < tiles_number; i++) {
     const tile = document.createElement('div');
@@ -23,10 +24,13 @@ for (let i = 0; i < tiles_number; i++) {
 }
 
 vanish_space();
-setInterval(random_activation, 4000);
-setInterval(random_line_activation, 4000);
+setTimeout(game, 2000);
+setInterval(random_activation, 1400);
+setInterval(random_line_activation, 3000);
 setInterval(random_back_line_activation, 2500);
 setInterval(random_triple_line_activation, 2500);
+setInterval(random_back_line_activation, 3500);
+setInterval(random_triple_line_activation, 3500);
 
 function change_element(element) {
     let color = get_random_color();
@@ -37,7 +41,7 @@ function change_element(element) {
     element.style.boxShadow = `0 0 2px ${color}, 0 0 10px ${color}`;
 }
 
-function change_element_red(element){
+function change_element_red(element) {
     element.style.backgroundColor = 'red';
 }
 
@@ -89,7 +93,7 @@ function random_back_line_activation() {
 }
 
 function random_triple_line_activation() {
-    let temp_index = Math.floor(Math.random() * (tiles.length - 80));
+    let temp_index = Math.floor(Math.random() * (tiles.length - (columns_number * 3 + 10)));
 
     for (let k = 0; k < 3; k++) {
         (() => {
@@ -98,7 +102,7 @@ function random_triple_line_activation() {
                 setTimeout(() => change_element(tiles[index + i]), 300 * i);
                 setTimeout(() => get_back_element(tiles[index + i]), 1200 + 300 * i);
             };
-            temp_index += 22;
+            temp_index += columns_number + 2;
         })();
     }
 }
@@ -127,15 +131,54 @@ function boom_element(tile) {
     };
 }
 
-function vanish_space(){
-    for (let k = 0; k < tiles_number; k+=columns_number) {
+function vanish_space() {
+    for (let k = 0; k < tiles_number; k += columns_number) {
         (() => {
             let index = k;
             for (let i = 0; i < columns_number; i++) {
-                setTimeout(() => change_element_red(tiles[index + i]), 60 * i);
+                setTimeout(() => change_element(tiles[index + i]), 60 * i);
                 setTimeout(() => get_back_element(tiles[index + i]), 700 + 60 * i);
             };
         })();
     }
 }
 
+let score = {
+    counter: 0,
+    score_element: document.querySelector('#score'),
+    add_point: function () {
+        this.counter++;
+        return this.counter;
+    },
+    render() {
+        this.score_element.innerHTML = `Ты успел кликнуть на ${this.counter} <p>красных</p> тайлов из 7`;
+    },
+}
+
+function create_aim(index) {
+    let aim = tiles[index];
+    let aim_visible_interval = setInterval(()=>{aim.style.transition = ''; change_element_red(aim);}, 20);
+    let clear_visible_interval = setTimeout(() => clearInterval(aim_visible_interval), difficulty);
+    aim.addEventListener('click', shoot);
+    let aim_shoot_fail = setTimeout(()=>{
+        aim.removeEventListener('click', shoot);
+        get_back_element(aim)
+    }, difficulty);
+    function shoot() {
+        clearInterval(aim_visible_interval);
+        clearTimeout(clear_visible_interval);
+        clearTimeout(aim_shoot_fail);
+        aim.removeEventListener('click', shoot);
+        score.add_point();
+        score.render();
+        difficulty -= 150;
+        get_back_element(aim)
+    }
+
+    
+
+}
+
+function game() {
+    setInterval(()=>create_aim(Math.floor(Math.random() * tiles.length)), 4000);
+}

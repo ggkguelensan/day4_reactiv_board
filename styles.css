@@ -5,6 +5,7 @@
 body {
   background-color: #111;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
@@ -25,6 +26,8 @@ body {
   margin: 2px;
   box-shadow: 0 0 2px #000;
   transition: 2s ease;
+  width: 25px;
+  height: 25px;
 }
 
 .tile:hover{
@@ -37,21 +40,25 @@ body {
 }
 
 .circle{
-  width: 25px;
-  height: 25px;
   border-radius: 25px;
 }
 
 .rombusr {
-  width: 25px;
-  height: 25px;
   top: 0;
   transform: rotate(-45deg);
 }
 
 .rombusl {
-  width: 25px;
-  height: 25px;
   top: 0;
   transform: rotate(45deg);
+}
+
+#score{
+  color: white;
+  font-size: 23px;
+}
+
+p{
+  display: inline;
+  color: red;
 }
