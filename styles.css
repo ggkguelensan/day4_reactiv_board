@@ -1,0 +1,57 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 600px;
+}
+
+.tile{
+  background: #1d1d1d;
+  margin: 2px;
+  box-shadow: 0 0 2px #000;
+  transition: 2s ease;
+}
+
+.tile:hover{
+  transition-duration: 0s;
+}
+
+.square{
+  width: 25px;
+  height: 25px;
+}
+
+.circle{
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+}
+
+.rombusr {
+  width: 25px;
+  height: 25px;
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.rombusl {
+  width: 25px;
+  height: 25px;
+  top: 0;
+  transform: rotate(45deg);
+}
