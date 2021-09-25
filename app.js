@@ -1,10 +1,13 @@
-const board = document.querySelector('#board');
 const tiles_number = 300;
-const row_number = 20;
+const columns_number = 20;
+const rows_number = 15;
+
+const board = document.querySelector('#board');
 const log = console.log;
 const colors = ['#3dd', '#d5d', '#dee', '#fdd', '#dd0'];
 const shapes = ['square', 'circle', 'circle', 'circle', 'rombusr', 'rombusl'];
 let tiles = [];
+
 
 for (let i = 0; i < tiles_number; i++) {
     const tile = document.createElement('div');
@@ -19,8 +22,7 @@ for (let i = 0; i < tiles_number; i++) {
     board.append(tile);
 }
 
-random_back_line_activation();
-random_triple_line_activation();
+vanish_space();
 setInterval(random_activation, 4000);
 setInterval(random_line_activation, 4000);
 setInterval(random_back_line_activation, 2500);
@@ -33,6 +35,10 @@ function change_element(element) {
     element.classList.add(shape);
     element.style.backgroundColor = color;
     element.style.boxShadow = `0 0 2px ${color}, 0 0 10px ${color}`;
+}
+
+function change_element_red(element){
+    element.style.backgroundColor = 'red';
 }
 
 function get_back_element(element) {
@@ -100,23 +106,36 @@ function random_triple_line_activation() {
 function boom_element(tile) {
     const index = tiles.indexOf(tile);
 
-    for (let i = 20; 0 <= index - i; i += 20) {
+    for (let i = columns_number; 0 <= index - i; i += columns_number) {
         setTimeout(() => change_element(tiles[index - i]), 0);
         setTimeout(() => get_back_element(tiles[index - i]), 1200);
     };
 
-    for (let i = 20; tiles_number > index + i; i += 20) {
+    for (let i = columns_number; tiles_number > index + i; i += columns_number) {
         setTimeout(() => change_element(tiles[index + i]), 0);
         setTimeout(() => get_back_element(tiles[index + i]), 1200);
     };
 
-    for (let i = 1; i + index % 20 < 20; i++) {
+    for (let i = 1; i + index % columns_number < columns_number; i++) {
         setTimeout(() => change_element(tiles[index + i]), 0);
         setTimeout(() => get_back_element(tiles[index + i]), 1200);
     };
 
-    for (let i = 1; index % 20 - i + 1 > 0; i++) {
+    for (let i = 1; index % columns_number - i + 1 > 0; i++) {
         setTimeout(() => change_element(tiles[index - i]), 0);
         setTimeout(() => get_back_element(tiles[index - i]), 1200);
     };
 }
+
+function vanish_space(){
+    for (let k = 0; k < tiles_number; k+=columns_number) {
+        (() => {
+            let index = k;
+            for (let i = 0; i < columns_number; i++) {
+                setTimeout(() => change_element_red(tiles[index + i]), 60 * i);
+                setTimeout(() => get_back_element(tiles[index + i]), 700 + 60 * i);
+            };
+        })();
+    }
+}
+
